@@ -38,7 +38,8 @@ public class BankerAlgorithm {
             }
             int i = 0;
             // read max matrix
-            while ((line = r.readLine()) != null) {
+            while (i < numberOfProcesses) {
+                line = r.readLine();
                 s = new StringTokenizer(line, ",");
                 for (int j = 0; j < 3; j++) {
                     max[i][j] = Integer.parseInt(s.nextToken());
@@ -47,7 +48,8 @@ public class BankerAlgorithm {
             }
             // read allocation matrix
             i = 0;
-            while ((line = r.readLine()) != null) {
+            while (i < numberOfProcesses) {
+                line = r.readLine();
                 s = new StringTokenizer(line, ",");
                 for (int j = 0; j < 3; j++) {
                     allocation[i][j] = Integer.parseInt(s.nextToken());
@@ -60,7 +62,6 @@ public class BankerAlgorithm {
                     need[i][j] = max[i][j] - allocation[i][j];
                 }
             }
-
         } catch (IOException | NumberFormatException e) {
 
         }
@@ -69,12 +70,14 @@ public class BankerAlgorithm {
     public void run() {
         readData();
         String sequence;
+        goToStepOne();
         if (!isSafeState()) {
             System.out.println("System is in Safe State!");
         } else {
             int[] request = new int[4];
-            boolean found = false;
+            boolean found;
             do {
+                found = true;
                 System.out.println("Enter Your Request:");
                 Scanner sc = new Scanner(System.in);
                 for (int i = 0; i < 4; i++) {
@@ -114,7 +117,7 @@ public class BankerAlgorithm {
                 }
                 sequence = goToStepTow();
                 if (goToStepFour()) {
-                    System.out.format("Process%d is allocated its resources.", request[0]);
+                    System.out.format("Process%d is allocated its resources.\n", request[0]);
                     System.out.println("Safe State Sequence is: <" + sequence + ">");
                 } else {
                     System.out.format("Process%d is must wait until it is allocated its resources.", request[0]);
@@ -168,7 +171,7 @@ public class BankerAlgorithm {
             for (; i < numberOfProcesses; i++) {
                 if (finish[i] == false) {
                     boolean good = true;
-                    for (int j = 0; i < numberOfResources; j++) {
+                    for (int j = 0; j < numberOfResources; j++) {
                         if (need[i][j] > work[j]) {
                             good = false;
                             break;
@@ -213,7 +216,7 @@ public class BankerAlgorithm {
             for (; i < numberOfProcesses; i++) {
                 if (finish[i] == false) {
                     boolean good = true;
-                    for (int j = 0; i < numberOfResources; j++) {
+                    for (int j = 0; j < numberOfResources; j++) {
                         if (need[i][j] > work[j]) {
                             good = false;
                             break;
@@ -229,7 +232,7 @@ public class BankerAlgorithm {
             if (found) {
                 finish[i] = true;
                 for (int j = 0; j < numberOfResources; j++) {
-                    work[i] += allocation[i][j];
+                    work[j] += allocation[i][j];
                 }
             }
         } while (found);
